@@ -4,9 +4,9 @@ import { View, Text } from 'react-native';
 function HealthScreen() {
   return (
     <View>
-      <Text>Home Screen</Text>
+      <Text>Health</Text>
     </View>
   );
 }
 
-export {HealthScreen};
+export default HealthScreen;

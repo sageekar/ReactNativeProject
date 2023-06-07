@@ -3,9 +3,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HealthScreen from './screens/HealthScreen';
-import FoodScreen from './screens/FoodScreen';
-import MealScreen from './screens/MealScreen';
+import HealthScreen from './screens/HealthScreen.js';
+import FoodScreen from './screens/FoodScreen.js';
+import MealScreen from './screens/MealScreen.js';
 
 const Tab = createBottomTabNavigator();
 

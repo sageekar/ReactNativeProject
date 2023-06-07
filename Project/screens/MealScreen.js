@@ -9,4 +9,4 @@ function MealScreen() {
     );
 }
 
-  export {MealScreen};
+export default MealScreen;

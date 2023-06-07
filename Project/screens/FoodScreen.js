@@ -9,4 +9,4 @@ function FoodScreen() {
     );
   }
 
-  export {FoodScreen};
+  export default FoodScreen;
