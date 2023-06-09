@@ -9,6 +9,7 @@ function HealthScreen() {
   const [weight, setWeight] = useState('');
   const [activityLevel, setActivityLevel] = useState('sedentary');
   const [healthGoal, setHealthGoal] = useState('weight loss');
+  const [submitDisabled, setSubmitDisabled] = useState(true);
 
   const handleAgeChange = (text) => {
     setAge(text);
@@ -39,6 +40,18 @@ function HealthScreen() {
     Alert.alert('Form Submitted', message);
   };
 
+  const validateForm = () => {
+    if (age.trim() === '' || gender.trim() === '' || height.trim() === '' || weight.trim() === '') {
+      setSubmitDisabled(true);
+    } else {
+      setSubmitDisabled(false);
+    }
+  };
+
+  React.useEffect(() => {
+    validateForm();
+  }, [age, gender, height, weight]);
+
   return (
     <View>
       <TextInput
@@ -65,12 +78,11 @@ function HealthScreen() {
         onChangeText={handleWeightChange}
         value={weight}
       />
-       <Text style={styles.label}>Activity Level:</Text>
+      <Text style={styles.label}>Activity Level:</Text>
       <Picker
         selectedValue={activityLevel}
         style={styles.picker}
-        onValueChange={handleActivityLevelChange}
-      >
+        onValueChange={handleActivityLevelChange}>
         <Picker.Item label="Sedentary" value="sedentary" />
         <Picker.Item label="Light Exercise" value="lightExercise" />
         <Picker.Item label="Moderate Exercise" value="moderateExercise" />
@@ -87,7 +99,8 @@ function HealthScreen() {
         <Picker.Item label="Weight Maintenance" value="weightMaintenance" />
         <Picker.Item label="Weight Gain" value="weightGain" />
       </Picker>
-      <Button title="Submit" onPress={handleSubmit} />
+
+      <Button title="Submit" onPress={handleSubmit} disabled={submitDisabled} />
     </View>
   );
 }
