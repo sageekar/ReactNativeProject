@@ -10,6 +10,7 @@ function HealthScreen() {
   const [activityLevel, setActivityLevel] = useState('sedentary');
   const [healthGoal, setHealthGoal] = useState('weight loss');
   const [submitDisabled, setSubmitDisabled] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleAgeChange = (text) => {
     setAge(text);
@@ -43,6 +44,7 @@ function HealthScreen() {
     Activity Level: ${activityLevel}\n
     Health Goal: ${healthGoal}\n
     BMR: ${calculateBMR()}`;
+    setSubmitted(true);
     Alert.alert('Form Submitted', message);
   };
 
@@ -58,15 +60,42 @@ function HealthScreen() {
     const weightInKg = parseFloat(weight);
     const heightInCm = parseFloat(height);
     const ageInYears = parseFloat(age);
-
+  
     let bmr = 0;
-
+  
     if (gender === 'male' || gender === 'Male') {
       bmr = 88.362 + 13.397 * weightInKg + 4.799 * heightInCm - 5.677 * ageInYears;
     } else if (gender === 'female' || gender === 'Female') {
       bmr = 447.593 + 9.247 * weightInKg + 3.098 * heightInCm - 4.330 * ageInYears;
     }
-
+  
+    switch (activityLevel) {
+      case 'sedentary':
+        bmr *= 1.2;
+        break;
+      case 'lightExercise':
+        bmr *= 1.375;
+        break;
+      case 'moderateExercise':
+        bmr *= 1.55;
+        break;
+      case 'heavyExercise':
+        bmr *= 1.725;
+        break;
+      case 'extraExercise':
+        bmr *= 1.9;
+        break;
+      default:
+        Alert.alert('Activity error');
+        break;
+    }
+  
+    if (healthGoal === 'weightLoss') {
+      bmr *= 0.9;
+    } else if (healthGoal === 'weightGain') {
+      bmr *= 1.1;
+    }
+  
     return bmr.toFixed(2);
   };
 
@@ -123,6 +152,14 @@ function HealthScreen() {
       </Picker>
 
       <Button title="Submit" onPress={handleSubmit} disabled={submitDisabled} />
+
+      {submitted && (
+        <View>
+          <Text style={styles.label}>Your Daily Caloric Intake:</Text>
+          <Text style={styles.caloricIntake}>{calculateBMR()} calories</Text>
+        </View>
+      )}
+
     </View>
   );
 }
