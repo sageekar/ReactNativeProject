@@ -36,7 +36,13 @@ function HealthScreen() {
   };
 
   const handleSubmit = () => {
-    const message = `Age: ${age}\nGender: ${gender}\nHeight: ${height}\nWeight: ${weight}\nActivity Level: ${activityLevel}\nHealth Goal: ${healthGoal}`;
+    const message = `Age: ${age}\n
+    Gender: ${gender}\n
+    Height: ${height}\n
+    Weight: ${weight}\n
+    Activity Level: ${activityLevel}\n
+    Health Goal: ${healthGoal}\n
+    BMR: ${calculateBMR()}`;
     Alert.alert('Form Submitted', message);
   };
 
@@ -46,6 +52,22 @@ function HealthScreen() {
     } else {
       setSubmitDisabled(false);
     }
+  };
+
+  const calculateBMR = () => {
+    const weightInKg = parseFloat(weight);
+    const heightInCm = parseFloat(height);
+    const ageInYears = parseFloat(age);
+
+    let bmr = 0;
+
+    if (gender === 'male' || gender === 'Male') {
+      bmr = 88.362 + 13.397 * weightInKg + 4.799 * heightInCm - 5.677 * ageInYears;
+    } else if (gender === 'female' || gender === 'Female') {
+      bmr = 447.593 + 9.247 * weightInKg + 3.098 * heightInCm - 4.330 * ageInYears;
+    }
+
+    return bmr.toFixed(2);
   };
 
   React.useEffect(() => {
