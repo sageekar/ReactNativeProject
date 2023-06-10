@@ -12,7 +12,6 @@ import {
   Modal,
 } from 'react-native';
 
-
 const FoodScreen = () => {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -21,6 +20,15 @@ const FoodScreen = () => {
   const [Quantity, setQuantity] = useState('');
   const [Day, setDay] = useState('');
   const [Meal, setMeal] = useState('Breakfast');
+  const [details, setDetails] = useState(null);
+  const [mealPlan, setMealPlan] = useState({
+    Day1: {
+      Breakfast: [],
+      Lunch: [],
+      Snack: [],
+      Dinner: [],
+    },
+  });
 
   const handleQuantityChange = (text) => {
     setQuantity(text);
@@ -33,6 +41,22 @@ const FoodScreen = () => {
   const handleMealChange = (value) => {
     setMeal(value);
   };
+
+  const updateMealPlan = (day, meal, item) => {
+    setMealPlan((prevMealPlan) => {
+      if (!prevMealPlan[day]) {
+        prevMealPlan[day] = {
+          Breakfast: [],
+          Lunch: [],
+          Snack: [],
+          Dinner: [],
+        };
+      }
+      prevMealPlan[day][meal].push(item);
+      console.log(prevMealPlan);
+    });
+  };
+
 
   const handleSearch = async () => {
     const appId = '2eb6fd30';
@@ -62,9 +86,20 @@ const FoodScreen = () => {
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
+          setDetails(null);
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            {details && details.food && (
+              <Text>
+                {details.food.label}
+                {'\n'}Cal:
+                {details.food.nutrients.ENERC_KCAL}
+                {'\n'}Fat: {details.food.nutrients.FAT}
+                {'\n'}Carbs: {details.food.nutrients.CHOCDF}
+                {'\n'}Protein:{details.food.nutrients.PROCNT}
+              </Text>
+            )}
             <TextInput
               style={styles.input}
               placeholder="Quantity"
@@ -79,12 +114,18 @@ const FoodScreen = () => {
             />
             <Text style={styles.label}>Select meal :</Text>
             <Picker selectedValue={Meal} style={styles.picker} onValueChange={handleMealChange}>
-              <Picker.Item label="Breakfast" value="breakfast" />
-              <Picker.Item label="Lunch" value="lunch" />
-              <Picker.Item label="Snack" value="snack" />
-              <Picker.Item label="Dinner" value="dinner" />
+              <Picker.Item label="Breakfast" value="Breakfast" />
+              <Picker.Item label="Lunch" value="Lunch" />
+              <Picker.Item label="Snack" value="Snack" />
+              <Picker.Item label="Dinner" value="Dinner" />
             </Picker>
-            <Button title="Update" onPress={() => setModalVisible(!modalVisible)}/>
+            <Button
+              title="Update"
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                updateMealPlan(Day, Meal, details.food.label);
+              }}
+            />
           </View>
         </View>
       </Modal>
@@ -93,15 +134,21 @@ const FoodScreen = () => {
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <FlatList
         data={searchResults}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text style={styles.item}>
-              {item.food.label}
-              {'\n'}Cal:
-              {item.food.nutrients.ENERC_KCAL}
-            </Text>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) =>
+          item.food && (
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(true);
+                setDetails(item);
+              }}>
+              <Text style={styles.item}>
+                {item.food.label}
+                {'\n'}Cal:
+                {item.food.nutrients.ENERC_KCAL}
+              </Text>
+            </TouchableOpacity>
+          )
+        }
         keyExtractor={(item) => item.food.foodId}
       />
     </View>
@@ -114,7 +161,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   textStyle: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   searchInput: {
     height: 40,
@@ -148,7 +195,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 10,
+    marginTop: 10,
     paddingHorizontal: 10,
   },
   label: {
@@ -166,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 20,
-    margin: 5
+    margin: 5,
   },
 });
 
