@@ -21,14 +21,7 @@ const FoodScreen = () => {
   const [Day, setDay] = useState('');
   const [Meal, setMeal] = useState('Breakfast');
   const [details, setDetails] = useState(null);
-  const [mealPlan, setMealPlan] = useState({
-    Day1: {
-      Breakfast: [],
-      Lunch: [],
-      Snack: [],
-      Dinner: [],
-    },
-  });
+  const [mealPlan, setMealPlan] = useState({});
 
   const handleQuantityChange = (text) => {
     setQuantity(text);
