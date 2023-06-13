@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -21,7 +22,6 @@ const FoodScreen = () => {
   const [Day, setDay] = useState('');
   const [Meal, setMeal] = useState('Breakfast');
   const [details, setDetails] = useState(null);
-  const [mealPlan, setMealPlan] = useState({});
 
   const handleQuantityChange = (text) => {
     setQuantity(text);
@@ -35,19 +35,15 @@ const FoodScreen = () => {
     setMeal(value);
   };
 
-  const updateMealPlan = (day, meal, item) => {
-    setMealPlan((prevMealPlan) => {
-      if (!prevMealPlan[day]) {
-        prevMealPlan[day] = {
-          Breakfast: [],
-          Lunch: [],
-          Snack: [],
-          Dinner: [],
-        };
-      }
-      prevMealPlan[day][meal].push(item);
-      console.log(prevMealPlan);
-    });
+  const storeArray = async () => {
+    try {
+      const arrayData = [1, 2, 3, 4, 5];
+      const serializedData = JSON.stringify(arrayData);
+      await AsyncStorage.setItem('my_array', serializedData);
+      console.log('Array stored successfully!');
+    } catch (error) {
+      console.log('Error storing array:', error);
+    }
   };
 
 
@@ -116,7 +112,7 @@ const FoodScreen = () => {
               title="Update"
               onPress={() => {
                 setModalVisible(!modalVisible);
-                updateMealPlan(Day, Meal, details.food.label);
+                storeArray();
               }}
             />
           </View>
