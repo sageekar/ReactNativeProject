@@ -35,17 +35,28 @@ const FoodScreen = () => {
     setMeal(value);
   };
 
-  const storeArray = async () => {
+  const storeArray = async (quantity, meal, day, label) => {
     try {
-      const arrayData = [1, 2, 3, 4, 5];
-      const serializedData = JSON.stringify(arrayData);
-      await AsyncStorage.setItem('my_array', serializedData);
+      const serializedData = await AsyncStorage.getItem('my_array');
+      const arrayData = serializedData ? JSON.parse(serializedData) : {};
+  
+      if (!arrayData[day]) {
+        arrayData[day] = {};
+      }
+      if (!arrayData[day][meal]) {
+        arrayData[day][meal] = [];
+      }
+  
+      arrayData[day][meal].push(label + ' ' + quantity);
+  
+      const updatedData = JSON.stringify(arrayData);
+      await AsyncStorage.setItem('my_array', updatedData);
       console.log('Array stored successfully!');
     } catch (error) {
       console.log('Error storing array:', error);
     }
   };
-
+  
 
   const handleSearch = async () => {
     const appId = '2eb6fd30';
@@ -112,7 +123,7 @@ const FoodScreen = () => {
               title="Update"
               onPress={() => {
                 setModalVisible(!modalVisible);
-                storeArray();
+                storeArray(Quantity, Meal, Day, details.food.label);
               }}
             />
           </View>
@@ -138,7 +149,7 @@ const FoodScreen = () => {
             </TouchableOpacity>
           )
         }
-        keyExtractor={(item) => item.food.foodId}
+        keyExtractor={(item, index) => item.food.foodId + '-' + index}
       />
     </View>
   );
