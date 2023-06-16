@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 const FoodScreen = () => {
   const [query, setQuery] = useState('');
@@ -20,11 +19,9 @@ const FoodScreen = () => {
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [Quantity, setQuantity] = useState('');
-  const [Day, setDay] = useState('');
+  const [Day, setDay] = useState('Monday');
   const [Meal, setMeal] = useState('Breakfast');
   const [details, setDetails] = useState(null);
-
-  const navigation = useNavigation();
 
   const handleQuantityChange = (text) => {
     // Filter out non numeric characters
@@ -40,20 +37,66 @@ const FoodScreen = () => {
     setMeal(value);
   };
 
-  const storeArray = async (quantity, Meal, Day, label) => {
+  const storeArray = async (quantity, Meal, Day, label, cal) => {
     try {
       const serializedData = await AsyncStorage.getItem('my_array');
-      const arrayData = serializedData ? JSON.parse(serializedData) : {};
-  
+      const arrayData = serializedData
+        ? JSON.parse(serializedData)
+        : {
+            Monday: {
+              Breakfast: [],
+              Lunch: [],
+              Snack: [],
+              Dinner: [],
+            },
+            Tuesday: {
+              Breakfast: [],
+              Lunch: [],
+              Snack: [],
+              Dinner: [],
+            },
+            Wednesday: {
+              Breakfast: [],
+              Lunch: [],
+              Snack: [],
+              Dinner: [],
+            },
+            Thursday: {
+              Breakfast: [],
+              Lunch: [],
+              Snack: [],
+              Dinner: [],
+            },
+            Friday: {
+              Breakfast: [],
+              Lunch: [],
+              Snack: [],
+              Dinner: [],
+            },
+            Saturday: {
+              Breakfast: [],
+              Lunch: [],
+              Snack: [],
+              Dinner: [],
+            },
+            Sunday: {
+              Breakfast: [],
+              Lunch: [],
+              Snack: [],
+              Dinner: [],
+            },
+          };
+
       if (!arrayData[Day]) {
         arrayData[Day] = {};
       }
       if (!arrayData[Day][Meal]) {
         arrayData[Day][Meal] = [];
       }
-  
-      arrayData[Day][Meal].push(label + ' ' + quantity);
-  
+
+      const item = { name: label, quant: quantity, calories: cal };
+      arrayData[Day][Meal].push(item);
+
       const updatedData = JSON.stringify(arrayData);
       await AsyncStorage.setItem('my_array', updatedData);
       console.log('Array stored successfully!');
@@ -61,7 +104,6 @@ const FoodScreen = () => {
       console.log('Error storing array:', error);
     }
   };
-  
 
   const handleSearch = async () => {
     const appId = '2eb6fd30';
@@ -82,15 +124,6 @@ const FoodScreen = () => {
       console.error(error);
     }
   };
-
-  const handleAddFood = () => {
-    if(details && details.food) {
-      storeArray(Quantity, Meal, Day, details.food.label);
-      navigation.navigate('MealScreen', { Day : Day, Meal : Meal });
-    }
-    setModalVisible(false);
-    setDetails(null);
-  }
 
   return (
     <View style={styles.container}>
@@ -120,12 +153,6 @@ const FoodScreen = () => {
               onChangeText={handleQuantityChange}
               value={Quantity}
             />
-            {/* <TextInput
-              style={styles.input}
-              placeholder="Day"
-              onChangeText={handleDayChange}
-              value={Day}
-            /> */}
             <Text style={styles.label}>Select day :</Text>
             <Picker selectedValue={Day} style={styles.picker} onValueChange={handleDayChange}>
               <Picker.Item label="Monday" value="Monday" />
@@ -147,7 +174,13 @@ const FoodScreen = () => {
               title="Update"
               onPress={() => {
                 setModalVisible(!modalVisible);
-                storeArray(Quantity, Meal, Day, details.food.label);
+                storeArray(
+                  Quantity,
+                  Meal,
+                  Day,
+                  details.food.label,
+                  details.food.nutrients.ENERC_KCAL
+                );
               }}
             />
           </View>
