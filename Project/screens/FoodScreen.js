@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const FoodScreen = () => {
   const [query, setQuery] = useState('');
@@ -23,8 +24,12 @@ const FoodScreen = () => {
   const [Meal, setMeal] = useState('Breakfast');
   const [details, setDetails] = useState(null);
 
+  const navigation = useNavigation();
+
   const handleQuantityChange = (text) => {
-    setQuantity(text);
+    // Filter out non numeric characters
+    const numericText = text.replace(/[^0-9]/g, '');
+    setQuantity(numericText);
   };
 
   const handleDayChange = (text) => {
@@ -35,19 +40,19 @@ const FoodScreen = () => {
     setMeal(value);
   };
 
-  const storeArray = async (quantity, meal, day, label) => {
+  const storeArray = async (quantity, Meal, Day, label) => {
     try {
       const serializedData = await AsyncStorage.getItem('my_array');
       const arrayData = serializedData ? JSON.parse(serializedData) : {};
   
-      if (!arrayData[day]) {
-        arrayData[day] = {};
+      if (!arrayData[Day]) {
+        arrayData[Day] = {};
       }
-      if (!arrayData[day][meal]) {
-        arrayData[day][meal] = [];
+      if (!arrayData[Day][Meal]) {
+        arrayData[Day][Meal] = [];
       }
   
-      arrayData[day][meal].push(label + ' ' + quantity);
+      arrayData[Day][Meal].push(label + ' ' + quantity);
   
       const updatedData = JSON.stringify(arrayData);
       await AsyncStorage.setItem('my_array', updatedData);
@@ -78,6 +83,15 @@ const FoodScreen = () => {
     }
   };
 
+  const handleAddFood = () => {
+    if(details && details.food) {
+      storeArray(Quantity, Meal, Day, details.food.label);
+      navigation.navigate('MealScreen', { Day : Day, Meal : Meal });
+    }
+    setModalVisible(false);
+    setDetails(null);
+  }
+
   return (
     <View style={styles.container}>
       <Modal
@@ -106,12 +120,22 @@ const FoodScreen = () => {
               onChangeText={handleQuantityChange}
               value={Quantity}
             />
-            <TextInput
+            {/* <TextInput
               style={styles.input}
               placeholder="Day"
               onChangeText={handleDayChange}
               value={Day}
-            />
+            /> */}
+            <Text style={styles.label}>Select day :</Text>
+            <Picker selectedValue={Day} style={styles.picker} onValueChange={handleDayChange}>
+              <Picker.Item label="Monday" value="Monday" />
+              <Picker.Item label="Tuesday" value="Tuesday" />
+              <Picker.Item label="Wednesday" value="Wednesday" />
+              <Picker.Item label="Thursday" value="Thursday" />
+              <Picker.Item label="Friday" value="Friday" />
+              <Picker.Item label="Saturday" value="Saturday" />
+              <Picker.Item label="Sunday" value="Sunday" />
+            </Picker>
             <Text style={styles.label}>Select meal :</Text>
             <Picker selectedValue={Meal} style={styles.picker} onValueChange={handleMealChange}>
               <Picker.Item label="Breakfast" value="Breakfast" />

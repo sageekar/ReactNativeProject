@@ -1,8 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState, useEffect} from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect, useState} from 'react';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import MealSection from './MealSection';
 
+
+// Ton Code déjà là
 /*const retrieveArray = async () => {
   try {
     const serializedData = await AsyncStorage.getItem('my_array');
@@ -30,8 +32,11 @@ function MealScreen() {
     </View>
   )};*/
 
+
+  // Mon Code qui marchait avant d'essayer de faire la connexion
+
   const MealScreen = () => {
-    const mealPlan  = {
+    const [mealPlan, setMealPlan]  = useState({
       Monday: {
         Breakfast: [],
         Lunch: [],
@@ -74,62 +79,108 @@ function MealScreen() {
         Snack: [],
         Diner: [],
       },
-    };
+  });
 
-  return (
-    <View>
-      {/*Our view for each day */}
-      <View>
-        <Text>Monday</Text>
-        <MealSection mealItems={mealPlan.Monday.Breakfast} />
-        <MealSection mealItems={mealPlan.Monday.Lunch} />
-        <MealSection mealItems={mealPlan.Monday.Snack} />
-        <MealSection mealItems={mealPlan.Monday.Diner} />
-      </View>
-      <View>
-        <Text>Tuesday</Text>
-        <MealSection mealItems={mealPlan.Tuesday.Breakfast} />
-        <MealSection mealItems={mealPlan.Tuesday.Lunch} />
-        <MealSection mealItems={mealPlan.Tuesday.Snack} />
-        <MealSection mealItems={mealPlan.Tuesday.Diner} />
-      </View>
-      <View>
-        <Text>Wednesday</Text>
-        <MealSection mealItems={mealPlan.Wednesday.Breakfast} />
-        <MealSection mealItems={mealPlan.Wednesday.Lunch} />
-        <MealSection mealItems={mealPlan.Wednesday.Snack} />
-        <MealSection mealItems={mealPlan.Wednesday.Diner} />
-      </View>
-      <View>
-        <Text>Thursday</Text>
-        <MealSection mealItems={mealPlan.Thursday.Breakfast} />
-        <MealSection mealItems={mealPlan.Thursday.Lunch} />
-        <MealSection mealItems={mealPlan.Thursday.Snack} />
-        <MealSection mealItems={mealPlan.Thursday.Diner} />
-      </View>
-      <View>
-        <Text>Friday</Text>
-        <MealSection mealItems={mealPlan.Friday.Breakfast} />
-        <MealSection mealItems={mealPlan.Friday.Lunch} />
-        <MealSection mealItems={mealPlan.Friday.Snack} />
-        <MealSection mealItems={mealPlan.Friday.Diner} />
-      </View>
-      <View>
-        <Text>Saturday</Text>
-        <MealSection mealItems={mealPlan.Saturday.Breakfast} />
-        <MealSection mealItems={mealPlan.Saturday.Lunch} />
-        <MealSection mealItems={mealPlan.Saturday.Snack} />
-        <MealSection mealItems={mealPlan.Saturday.Diner} />
-      </View>
-      <View>
-        <Text>Sunday</Text>
-        <MealSection mealItems={mealPlan.Sunday.Breakfast} />
-        <MealSection mealItems={mealPlan.Sunday.Lunch} />
-        <MealSection mealItems={mealPlan.Sunday.Snack} />
-        <MealSection mealItems={mealPlan.Sunday.Diner} />
-      </View>
+  // Mon Code qui marchait avant d'essayer de faire la connexion
+  return(
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {Object.entries(mealPlan).map(([day, meals]) => (
+          <View key={day} style={styles.dayContainer}>
+            <Text style={styles.dayText}>{day}</Text>
+            {Object.entries(meals).map(([meal, items]) => (
+              <MealSection key={meal} mealName={meal} mealItems={items} />
+            ))}
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
+
+// Mon Code qui marchait avant d'essayer de faire la connexion
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F7F7F7',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+  },
+  dayContainer: {
+    marginBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+  },
+  dayText:{
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+});
+
+
+  // Tentative connexion part 1
+  // const MealScreen = ({ route }) => {
+  //   const {Meal} = route.params;
+  //   const {Day} = route.params;
+  //   const [meals, setMeals] = useState([]);
+
+  //   useEffect(() => {
+  //     const fetchData = async () => {
+  //       try {
+  //         const serializedData = await AsyncStorage.getItem('my_array');
+  //         const arrayData = serializedData ? JSON.parse(serializedData) : {};
+  //         const mealsForDayAndMeal = arrayData[Day]?.[Meal] || [];
+  //         setMeals(mealsForDayAndMeal);
+  //         } catch (error) {
+  //           console.log("Error fetching meals:", error);
+  //         }
+  //     };
+      
+  //     fetchData();
+  //   }, [Day, Meal]);
+
+// Test connexion part 2
+//   return(
+//     <View style={styles.container}>
+//       <Text style={styles.title}>Meal for the {Meal} on {Day}</Text>
+//       {meals.length > 0 ? (
+//         meals.map((Meal, index) => (
+//           <Text key={index} style={styles.mealText}>
+//             {Meal}
+//           </Text>
+//         ))
+//       ) : (
+//         <Text style={styles.noMealText}>No meals added for {Meal} on {Day}</Text>
+//       )}
+//     </View>
+//   );
+// };
+
+// Test connexion part 3
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     padding: 16,
+//   },
+//   title:{
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     marginBottom: 16,
+//   },
+//   mealText: {
+//     marginBottom: 8,
+//   },
+//   noMealText: {
+//     fontStyle: 'italic',
+//   },
+// });
 
 export default MealScreen;
