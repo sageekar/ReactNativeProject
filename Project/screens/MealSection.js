@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
+
   quantityText: {
     fontSize: 12,
     color: '#888',

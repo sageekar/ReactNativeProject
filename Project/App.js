@@ -4,11 +4,13 @@ import React from 'react';
 import FoodScreen from './screens/FoodScreen.js';
 import HealthScreen from './screens/HealthScreen.js';
 import MealScreen from './screens/MealScreen.js';
+import { MealProvider } from './MealContext';
 
 const Tab = createBottomTabNavigator();
 
 function App() {
   return (
+    <MealProvider>
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name="Health goals" component={HealthScreen} />
@@ -16,6 +18,7 @@ function App() {
           <Tab.Screen name="Meal planning" component={MealScreen} />
         </Tab.Navigator>
       </NavigationContainer>
+    </MealProvider>
   );
 }
 

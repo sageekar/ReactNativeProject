@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
+import MealContext, { MealProvider } from '../MealContext';
 
 const FoodScreen = () => {
   const [query, setQuery] = useState('');
@@ -22,9 +23,14 @@ const FoodScreen = () => {
   const [Day, setDay] = useState('Monday');
   const [Meal, setMeal] = useState('Breakfast');
   const [details, setDetails] = useState(null);
+  const { mealPlan, updateMealPlan } = useContext(MealContext);
+
+  useEffect(() => {
+    retrieveArray();
+  }, []);
 
   const handleQuantityChange = (text) => {
-    // Filter out non numeric characters
+    // Filter out non-numeric characters
     const numericText = text.replace(/[^0-9]/g, '');
     setQuantity(numericText);
   };
@@ -37,55 +43,24 @@ const FoodScreen = () => {
     setMeal(value);
   };
 
-  const storeArray = async (quantity, Meal, Day, label, cal) => {
+  const retrieveArray = async () => {
     try {
       const serializedData = await AsyncStorage.getItem('my_array');
-      const arrayData = serializedData
-        ? JSON.parse(serializedData)
-        : {
-            Monday: {
-              Breakfast: [],
-              Lunch: [],
-              Snack: [],
-              Dinner: [],
-            },
-            Tuesday: {
-              Breakfast: [],
-              Lunch: [],
-              Snack: [],
-              Dinner: [],
-            },
-            Wednesday: {
-              Breakfast: [],
-              Lunch: [],
-              Snack: [],
-              Dinner: [],
-            },
-            Thursday: {
-              Breakfast: [],
-              Lunch: [],
-              Snack: [],
-              Dinner: [],
-            },
-            Friday: {
-              Breakfast: [],
-              Lunch: [],
-              Snack: [],
-              Dinner: [],
-            },
-            Saturday: {
-              Breakfast: [],
-              Lunch: [],
-              Snack: [],
-              Dinner: [],
-            },
-            Sunday: {
-              Breakfast: [],
-              Lunch: [],
-              Snack: [],
-              Dinner: [],
-            },
-          };
+      if (serializedData !== null) {
+        const arrayData = JSON.parse(serializedData);
+        console.log('Retrieved array:', arrayData);
+        updateMealPlan(arrayData);
+      } else {
+        console.log('No array data found.');
+      }
+    } catch (error) {
+      console.log('Error retrieving array:', error);
+    }
+  };
+
+  const storeArray = async (quantity, Meal, Day, label, cal) => {
+    try {
+      const arrayData = { ...mealPlan };
 
       if (!arrayData[Day]) {
         arrayData[Day] = {};
@@ -100,6 +75,7 @@ const FoodScreen = () => {
       const updatedData = JSON.stringify(arrayData);
       await AsyncStorage.setItem('my_array', updatedData);
       console.log('Array stored successfully!');
+      updateMealPlan(arrayData); // Update the meal plan in the contex
     } catch (error) {
       console.log('Error storing array:', error);
     }
@@ -140,11 +116,10 @@ const FoodScreen = () => {
             {details && details.food && (
               <Text>
                 {details.food.label}
-                {'\n'}Cal:
-                {details.food.nutrients.ENERC_KCAL}
+                {'\n'}Cal: {details.food.nutrients.ENERC_KCAL}
                 {'\n'}Fat: {details.food.nutrients.FAT}
                 {'\n'}Carbs: {details.food.nutrients.CHOCDF}
-                {'\n'}Protein:{details.food.nutrients.PROCNT}
+                {'\n'}Protein: {details.food.nutrients.PROCNT}
               </Text>
             )}
             <TextInput
@@ -200,8 +175,7 @@ const FoodScreen = () => {
               }}>
               <Text style={styles.item}>
                 {item.food.label}
-                {'\n'}Cal:
-                {item.food.nutrients.ENERC_KCAL}
+                {'\n'}Cal: {item.food.nutrients.ENERC_KCAL}
               </Text>
             </TouchableOpacity>
           )

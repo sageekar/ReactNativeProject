@@ -1,10 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
 import MealSection from './MealSection';
+import MealContext, { MealProvider } from '../MealContext';
 
 const MealScreen = () => {
+  const { mealPlan: contextMealPlan, updateMealPlan } = useContext(MealContext);
+
   const [mealPlan, setMealPlan] = useState({
     Monday: {
       Breakfast: [],
@@ -60,14 +63,15 @@ const MealScreen = () => {
       if (serializedData !== null) {
         const arrayData = JSON.parse(serializedData);
         console.log('Retrieved array:', arrayData);
-        setMealPlan(arrayData);
+        setMealPlan(arrayData); // Update the mealPlan state variable
+        updateMealPlan(arrayData); // Update the meal plan in the context
       } else {
         console.log('No array data found.');
       }
     } catch (error) {
       console.log('Error retrieving array:', error);
     }
-  };
+  };  
 
   const sortedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
