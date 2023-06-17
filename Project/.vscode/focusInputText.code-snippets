@@ -1,0 +1,20 @@
+{
+	"prefix": "",
+	"body": [
+	  "<TextInput",
+	  "        style={[",
+	  "          styles.input,",
+	  "          heightError ? styles.error : null,",
+	  "          isHeightFocused ? styles.focused : null,",
+	  "        ]}",
+	  "        onChangeText={validateHeight}",
+	  "        value={height}",
+	  "        placeholder=\"Height\"",
+	  "        keyboardType=\"numeric\"",
+	  "        onFocus={() => setIsHeightFocused(true)}",
+	  "        onBlur={() => setIsHeightFocused(false)}",
+	  "      />",
+	  "      {weightError && <Text style={styles.errorMessage}>{weightError}</Text>}"
+	],
+	"description": "ajouter le css pour faire briller les contous du champs de text"
+}
