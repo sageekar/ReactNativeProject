@@ -27,11 +27,10 @@ const FoodScreen = () => {
   const { mealPlan, updateMealPlan } = useContext(MealContext);
 
   useEffect(() => {
-    retrieveArray();
+    foodPlan();
   }, []);
 
   const handleQuantityChange = (text) => {
-    // Filter out non-numeric characters
     const numericText = text.replace(/[^0-9]/g, '');
     setQuantity(numericText);
   };
@@ -44,7 +43,7 @@ const FoodScreen = () => {
     setMeal(value);
   };
 
-  const retrieveArray = async () => {
+  const foodPlan = async () => {
     try {
       const serializedData = await AsyncStorage.getItem('my_array');
       if (serializedData !== null) {
@@ -76,7 +75,7 @@ const FoodScreen = () => {
       const updatedData = JSON.stringify(arrayData);
       await AsyncStorage.setItem('my_array', updatedData);
       console.log('Array stored successfully!');
-      updateMealPlan(arrayData); // Update the meal plan in the contex
+      updateMealPlan(arrayData);
     } catch (error) {
       console.log('Error storing array:', error);
     }

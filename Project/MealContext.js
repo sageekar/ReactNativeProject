@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MealContext = createContext();
 
-
 export const MealProvider = ({ children }) => {
   const [mealPlan, setMealPlan] = useState({
     Monday: {
@@ -51,15 +50,14 @@ export const MealProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    retrieveArray();
+    foodPlan();
   }, []);
 
-  const retrieveArray = async () => {
+  const foodPlan = async () => {
     try {
       const serializedData = await AsyncStorage.getItem('my_array');
       if (serializedData !== null) {
         const arrayData = JSON.parse(serializedData);
-        console.log('Retrieved array:', arrayData);
         setMealPlan(arrayData);
       } else {
         console.log('No array data found.');
@@ -74,9 +72,7 @@ export const MealProvider = ({ children }) => {
   };
 
   return (
-    <MealContext.Provider value={{ mealPlan, updateMealPlan }}>
-      {children}
-    </MealContext.Provider>
+    <MealContext.Provider value={{ mealPlan, updateMealPlan }}>{children}</MealContext.Provider>
   );
 };
 

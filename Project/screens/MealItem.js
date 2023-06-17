@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const MealSection = ({ mealName, mealItems }) => {
+const MealItem = ({ mealName, mealItems, onRemoveItem }) => {
   const renderMealItem = (item, index) => (
     <View style={styles.mealItemContainer} key={index}>
       <View style={styles.mealItemDetails}>
@@ -10,13 +10,13 @@ const MealSection = ({ mealName, mealItems }) => {
           {'  '}
           <Text style={styles.quantityText}>{item.quant}</Text>
         </Text>
-        <Text style={styles.mealItemCalories}>
-          {item.calories} {item.calories === 1 ? 'calorie' : 'calories'}
-        </Text>
+        <TouchableOpacity onPress={() => onRemoveItem(index)}>
+          <Text style={styles.removeButton}>Remove</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.separator} />
     </View>
-  );
+  );  
 
   // Calculate total calories
   const totalCalories = mealItems.reduce((total, item) => total + item.calories * item.quant, 0);
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MealSection;
+export default MealItem;

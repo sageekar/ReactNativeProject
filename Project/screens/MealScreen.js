@@ -1,11 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
-import MealSection from './MealSection';
+import MealItem from './MealItem';
 import MealContext, { MealProvider } from '../MealContext';
 
 const MealScreen = () => {
+  const navigation = useNavigation();
   const { mealPlan: contextMealPlan, updateMealPlan } = useContext(MealContext);
 
   const [mealPlan, setMealPlan] = useState({
@@ -57,25 +59,41 @@ const MealScreen = () => {
     setMealPlan(contextMealPlan);
   }, [contextMealPlan]);
 
-  const retrieveArray = async () => {
+  const handleAddMore = () => {
+    navigation.navigate('Food database');
+  };
+
+  const handleRemoveItem = async (day, meal, index) => {
+    const updatedMealPlan = { ...mealPlan };
+    updatedMealPlan[day][meal].splice(index, 1);
+    setMealPlan(updatedMealPlan);
+    updateMealPlan(updatedMealPlan);
+  
+    try {
+      await AsyncStorage.setItem('my_array', JSON.stringify(updatedMealPlan));
+      console.log('Meal plan updated successfully.');
+    } catch (error) {
+      console.log('Error updating meal plan:', error);
+    }
+  };
+
+  const foodPlan = async () => {
     try {
       const serializedData = await AsyncStorage.getItem('my_array');
       if (serializedData !== null) {
         const arrayData = JSON.parse(serializedData);
-        console.log('Retrieved array:', arrayData);
         setMealPlan(arrayData);
-        updateMealPlan(arrayData); // Update the meal plan in the context
+        updateMealPlan(arrayData);
       } else {
-        console.log('No array data found.');
+        console.log('No array found');
       }
     } catch (error) {
-      console.log('Error retrieving array:', error);
+      console.log('Error :', error);
     }
   };
 
   const sortedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  // Calculate total calories for each day and the overall total calories
   const totalCaloriesByDay = sortedDays.reduce((totals, day) => {
     const dayTotal = Object.values(mealPlan[day]).reduce((total, mealItems) => {
       return (
@@ -97,7 +115,12 @@ const MealScreen = () => {
             <Text style={styles.dayText}>{day}</Text>
             {mealPlan[day] ? (
               Object.entries(mealPlan[day]).map(([meal, items]) => (
-                <MealSection key={meal} mealName={meal} mealItems={items} />
+                <MealItem
+                  key={meal}
+                  mealName={meal}
+                  mealItems={items}
+                  onRemoveItem={(index) => handleRemoveItem(day, meal, index)}
+                />
               ))
             ) : (
               <Text style={styles.noItemsText}>No items</Text>
@@ -110,6 +133,9 @@ const MealScreen = () => {
           </View>
         ))}
       </ScrollView>
+      <TouchableOpacity style={styles.addButton} onPress={handleAddMore}>
+        <Text style={styles.addButtonText}>Add More</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -153,6 +179,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic',
     color: '#888',
+  },
+  addButton: {
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+  },
+  addButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

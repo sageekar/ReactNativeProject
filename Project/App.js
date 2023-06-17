@@ -1,10 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
+
+import { MealProvider } from './MealContext';
 import FoodScreen from './screens/FoodScreen.js';
 import HealthScreen from './screens/HealthScreen.js';
 import MealScreen from './screens/MealScreen.js';
-import { MealProvider } from './MealContext';
 
 const Tab = createBottomTabNavigator();
 
