@@ -54,8 +54,8 @@ const MealScreen = () => {
   });
 
   useEffect(() => {
-    retrieveArray();
-  }, []);
+    setMealPlan(contextMealPlan);
+  }, [contextMealPlan]);
 
   const retrieveArray = async () => {
     try {
@@ -63,7 +63,7 @@ const MealScreen = () => {
       if (serializedData !== null) {
         const arrayData = JSON.parse(serializedData);
         console.log('Retrieved array:', arrayData);
-        setMealPlan(arrayData); // Update the mealPlan state variable
+        setMealPlan(arrayData);
         updateMealPlan(arrayData); // Update the meal plan in the context
       } else {
         console.log('No array data found.');
@@ -71,9 +71,23 @@ const MealScreen = () => {
     } catch (error) {
       console.log('Error retrieving array:', error);
     }
-  };  
+  };
 
   const sortedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  // Calculate total calories for each day and the overall total calories
+  const totalCaloriesByDay = sortedDays.reduce((totals, day) => {
+    const dayTotal = Object.values(mealPlan[day]).reduce((total, mealItems) => {
+      return (
+        total +
+        mealItems.reduce((mealTotal, item) => {
+          return mealTotal + item.calories * item.quant;
+        }, 0)
+      );
+    }, 0);
+    totals[day] = dayTotal;
+    return totals;
+  }, {});
 
   return (
     <View style={styles.container}>
@@ -88,6 +102,11 @@ const MealScreen = () => {
             ) : (
               <Text style={styles.noItemsText}>No items</Text>
             )}
+            <View style={styles.dayTotalCaloriesContainer}>
+              <Text style={styles.dayTotalCaloriesText}>
+                Total Calories: {totalCaloriesByDay[day]}
+              </Text>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -118,6 +137,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
+  },
+  dayTotalCaloriesContainer: {
+    marginTop: 10,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 10,
+  },
+  dayTotalCaloriesText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  noItemsText: {
+    fontSize: 14,
+    fontStyle: 'italic',
+    color: '#888',
   },
 });
 

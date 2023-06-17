@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
+
 import MealContext, { MealProvider } from '../MealContext';
 
 const FoodScreen = () => {

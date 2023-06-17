@@ -18,11 +18,19 @@ const MealSection = ({ mealName, mealItems }) => {
     </View>
   );
 
+  // Calculate total calories
+  const totalCalories = mealItems.reduce((total, item) => total + item.calories * item.quant, 0);
+
   return (
     <View style={styles.container}>
       <Text style={styles.mealName}>{mealName}</Text>
       {mealItems.length > 0 ? (
-        mealItems.map(renderMealItem)
+        <>
+          {mealItems.map(renderMealItem)}
+          <View style={styles.totalCaloriesContainer}>
+            <Text style={styles.totalCaloriesText}>Total Calories: {totalCalories}</Text>
+          </View>
+        </>
       ) : (
         <Text style={styles.noItemsText}>No items</Text>
       )}
@@ -62,7 +70,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
-
   quantityText: {
     fontSize: 12,
     color: '#888',
@@ -75,6 +82,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic',
     color: '#888',
+  },
+  totalCaloriesContainer: {
+    marginTop: 10,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 10,
+  },
+  totalCaloriesText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
 
