@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import menLogo from '../assets/men_logo.png';
+import menLogo from '../assets/male_logo.png';
 import womenLogo from '../assets/female_logo.png';
 
 function RadioButton({ selected, onPress, children }) {
@@ -156,8 +156,8 @@ function HealthScreen() {
   return (
     <View style={styles.formContainer}>
       <TextInput
-        style={[styles.input, ageError ? styles.error : null, isAgeFocused ? styles.focused : null]}
-        placeholder="Age"
+        style={[styles.textInput, ageError ? styles.error : null, isAgeFocused ? styles.focused : null]}
+        placeholder="Age (in years)"
         onChangeText={validateAge}
         value={age}
         onFocus={() => setIsAgeFocused(true)}
@@ -191,13 +191,13 @@ function HealthScreen() {
 
       <TextInput
         style={[
-          styles.input,
+          styles.textInput,
           heightError ? styles.error : null,
           isHeightFocused ? styles.focused : null,
         ]}
         onChangeText={validateHeight}
         value={height}
-        placeholder="Height"
+        placeholder="Height (in cm)"
         keyboardType="numeric"
         onFocus={() => setIsHeightFocused(true)}
         onBlur={() => setIsHeightFocused(false)}
@@ -205,10 +205,10 @@ function HealthScreen() {
       {weightError && <Text style={styles.errorMessage}>{weightError}</Text>}
 
       <TextInput
-        style={[styles.input, weightError ? styles.error : null, isWeightFocused ? styles.focused : null,]}
+        style={[styles.textInput, weightError ? styles.error : null, isWeightFocused ? styles.focused : null,]}
         onChangeText={validateWeight}
         value={weight}
-        placeholder="Weight"
+        placeholder="Weight (in kg)"
         keyboardType="numeric"
         onFocus={() => setIsWeightFocused(true)}
         onBlur={() => setIsWeightFocused(false)}
@@ -254,11 +254,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  input: {
+  textInput: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
+    paddingLeft: 10,
   },
   focused: {
     height: 60,
@@ -304,6 +305,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    paddingLeft: 20,
   },
   genderLogo: {
     height: 50,
