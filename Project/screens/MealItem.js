@@ -16,9 +16,8 @@ const MealItem = ({ mealName, mealItems, onRemoveItem }) => {
       </View>
       <View style={styles.separator} />
     </View>
-  );  
-
-  // Calculate total calories
+  );
+  
   const totalCalories = mealItems.reduce((total, item) => total + item.calories * item.quant, 0);
 
   return (

@@ -70,7 +70,7 @@ const MealScreen = () => {
     updateMealPlan(updatedMealPlan);
   
     try {
-      await AsyncStorage.setItem('my_array', JSON.stringify(updatedMealPlan));
+      await AsyncStorage.setItem('my_food', JSON.stringify(updatedMealPlan));
       console.log('Meal plan updated successfully.');
     } catch (error) {
       console.log('Error updating meal plan:', error);
@@ -79,9 +79,9 @@ const MealScreen = () => {
 
   const foodPlan = async () => {
     try {
-      const serializedData = await AsyncStorage.getItem('my_array');
-      if (serializedData !== null) {
-        const arrayData = JSON.parse(serializedData);
+      const dataFood = await AsyncStorage.getItem('my_food');
+      if (dataFood !== null) {
+        const arrayData = JSON.parse(dataFood);
         setMealPlan(arrayData);
         updateMealPlan(arrayData);
       } else {

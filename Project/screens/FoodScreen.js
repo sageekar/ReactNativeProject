@@ -45,37 +45,35 @@ const FoodScreen = () => {
 
   const foodPlan = async () => {
     try {
-      const serializedData = await AsyncStorage.getItem('my_array');
-      if (serializedData !== null) {
-        const arrayData = JSON.parse(serializedData);
-        console.log('Retrieved array:', arrayData);
-        updateMealPlan(arrayData);
+      const dataFood = await AsyncStorage.getItem('my_food');
+      if (dataFood !== null) {
+        const arrayFood = JSON.parse(dataFood);
+        updateMealPlan(arrayFood);
       } else {
-        console.log('No array data found.');
+        console.log('No data found');
       }
     } catch (error) {
-      console.log('Error retrieving array:', error);
+      console.log('Error:', error);
     }
   };
 
-  const storeArray = async (quantity, Meal, Day, label, cal) => {
+  const storeFoods = async (quantity, Meal, Day, label, cal) => {
     try {
-      const arrayData = { ...mealPlan };
+      const arrayFood = { ...mealPlan };
 
-      if (!arrayData[Day]) {
-        arrayData[Day] = {};
+      if (!arrayFood[Day]) {
+        arrayFood[Day] = {};
       }
-      if (!arrayData[Day][Meal]) {
-        arrayData[Day][Meal] = [];
+      if (!arrayFood[Day][Meal]) {
+        arrayFood[Day][Meal] = [];
       }
 
       const item = { name: label, quant: quantity, calories: cal };
-      arrayData[Day][Meal].push(item);
+      arrayFood[Day][Meal].push(item);
 
-      const updatedData = JSON.stringify(arrayData);
-      await AsyncStorage.setItem('my_array', updatedData);
-      console.log('Array stored successfully!');
-      updateMealPlan(arrayData);
+      const updatedData = JSON.stringify(arrayFood);
+      await AsyncStorage.setItem('my_food', updatedData);
+      updateMealPlan(arrayFood);
     } catch (error) {
       console.log('Error storing array:', error);
     }
@@ -91,7 +89,7 @@ const FoodScreen = () => {
       );
       setSearchResults(response.data.hints);
       if (response.data.hints.length === 0) {
-        setError('No food matching the query was found');
+        setError('No food was found');
       } else {
         setError(null);
       }
@@ -111,15 +109,30 @@ const FoodScreen = () => {
           setModalVisible(!modalVisible);
           setDetails(null);
         }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+        <View style={styles.centered}>
+          <View style={styles.modal}>
             {details && details.food && (
               <Text>
-                {details.food.label}
-                {'\n'}Cal: {details.food.nutrients.ENERC_KCAL}
-                {'\n'}Fat: {details.food.nutrients.FAT}
-                {'\n'}Carbs: {details.food.nutrients.CHOCDF}
-                {'\n'}Protein: {details.food.nutrients.PROCNT}
+                <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{details.food.label}</Text>
+                <Text style={styles.modalDesc}>
+                  {'\n'}
+                  {'\n'}Cal:{' '}
+                  <Text style={{ fontWeight: 'bold', color: 'red' }}>
+                    {details.food.nutrients.ENERC_KCAL}
+                  </Text>
+                  {'\n'}Fat:{' '}
+                  <Text style={{ fontWeight: 'bold', color: 'orange' }}>
+                    {details.food.nutrients.FAT}
+                  </Text>
+                  {'\n'}Carbs:{' '}
+                  <Text style={{ fontWeight: 'bold', color: 'green' }}>
+                    {details.food.nutrients.CHOCDF}
+                  </Text>
+                  {'\n'}Protein:{' '}
+                  <Text style={{ fontWeight: 'bold', color: 'purple' }}>
+                    {details.food.nutrients.PROCNT}
+                  </Text>
+                </Text>
               </Text>
             )}
             <TextInput
@@ -149,7 +162,7 @@ const FoodScreen = () => {
               title="Update"
               onPress={() => {
                 setModalVisible(!modalVisible);
-                storeArray(
+                storeFoods(
                   Quantity,
                   Meal,
                   Day,
@@ -157,13 +170,14 @@ const FoodScreen = () => {
                   details.food.nutrients.ENERC_KCAL
                 );
               }}
+              disabled={!Quantity}
             />
           </View>
         </View>
       </Modal>
-      <TextInput style={styles.searchInput} placeholder="Search food..." onChangeText={setQuery} />
+      <TextInput style={styles.search} placeholder="Search food..." onChangeText={setQuery} />
       <Button title="Search" onPress={handleSearch} />
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {error ? <Text style={{ color: 'red' }}>{error}</Text> : null}
       <FlatList
         data={searchResults}
         renderItem={({ item }) =>
@@ -174,8 +188,8 @@ const FoodScreen = () => {
                 setDetails(item);
               }}>
               <Text style={styles.item}>
-                {item.food.label}
-                {'\n'}Cal: {item.food.nutrients.ENERC_KCAL}
+                <Text style={{ fontWeight: 'bold' }}>{item.food.label}</Text>
+                {'\n'}Calories : {item.food.nutrients.ENERC_KCAL}
               </Text>
             </TouchableOpacity>
           )
@@ -194,22 +208,19 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
   },
-  searchInput: {
+  search: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 8,
     paddingHorizontal: 8,
   },
-  errorText: {
-    color: 'red',
-  },
-  centeredView: {
+  centered: {
     flex: 1,
     justifyContent: 'center',
     margin: 50,
   },
-  modalView: {
+  modal: {
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 50,
@@ -245,6 +256,9 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
     margin: 5,
+  },
+  modalDesc: {
+    fontSize: 17,
   },
 });
 

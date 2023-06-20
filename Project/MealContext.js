@@ -55,15 +55,15 @@ export const MealProvider = ({ children }) => {
 
   const foodPlan = async () => {
     try {
-      const serializedData = await AsyncStorage.getItem('my_array');
-      if (serializedData !== null) {
-        const arrayData = JSON.parse(serializedData);
+      const dataFood = await AsyncStorage.getItem('my_food');
+      if (dataFood !== null) {
+        const arrayData = JSON.parse(dataFood);
         setMealPlan(arrayData);
       } else {
-        console.log('No array data found.');
+        console.log('No data found');
       }
     } catch (error) {
-      console.log('Error retrieving array:', error);
+      console.log('Error:', error);
     }
   };
 
