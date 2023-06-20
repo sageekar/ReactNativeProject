@@ -203,7 +203,7 @@ function HealthScreen() {
         onFocus={() => setIsHeightFocused(true)}
         onBlur={() => setIsHeightFocused(false)}
       />
-      {weightError && <Text style={styles.errorMessage}>{weightError}</Text>}
+      {heightError && <Text style={styles.errorMessage}>{heightError}</Text>}
 
       <TextInput
         style={[styles.textInput, weightError ? styles.error : null, isWeightFocused ? styles.focused : null,]}
