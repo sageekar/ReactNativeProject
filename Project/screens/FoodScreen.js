@@ -138,6 +138,7 @@ const FoodScreen = () => {
             <TextInput
               style={styles.input}
               placeholder="Quantity"
+              keyboardType="numeric"
               onChangeText={handleQuantityChange}
               value={Quantity}
             />

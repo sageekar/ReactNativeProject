@@ -159,6 +159,7 @@ function HealthScreen() {
         style={[styles.textInput, ageError ? styles.error : null, isAgeFocused ? styles.focused : null]}
         placeholder="Age (in years)"
         onChangeText={validateAge}
+        keyboardType="numeric"
         value={age}
         onFocus={() => setIsAgeFocused(true)}
         onBlur={() => setIsAgeFocused(false)}
