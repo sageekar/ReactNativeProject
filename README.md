@@ -15,7 +15,7 @@ This project was carried out by the following individuals:
 To set up this project on your local machine, follow these steps:
 
 1. Clone this repository on your local machine using `git clone git@github.com:sageekar/ReactNativeProject.git`.
-2. Navigate to the project directory using `cd ReactNativeProject`.
+2. Navigate to the project directory using `cd ReactNativeProject/Projet/`.
 3. Run `npm install` to install all project dependencies listed in the `package.json` file.
 4. If necessary, install additional dependencies using `npm add <dependency_name>`.
 5. Run `npm start` to start the development server.

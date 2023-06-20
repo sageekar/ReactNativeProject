@@ -8,7 +8,9 @@ import FoodScreen from './screens/FoodScreen.js';
 import HealthScreen from './screens/HealthScreen.js';
 import MealScreen from './screens/MealScreen.js';
 
-import myImage from './assets/compteur-de-calories.png';
+import healthLogo from './assets/target.png';
+import calendarLogo from './assets/compteur-de-calories.png';
+import foodLogo from './assets/food-logo.png';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,22 +24,26 @@ function App() {
               let IconComponent;
 
               if (route.name === 'Health goals') {
-                IconComponent = (
-                  <Image source={myImage} style={{ width: size, height: size, tintColor: color }} />
-                );
-              } else if (route.name === 'Food database') {
-                // todo for other logo
-              } else if (route.name === 'Meal planning') {
-                // todo
+                IconComponent = <Image source={healthLogo} style={{ width: size, height: size }} />;
+                return IconComponent;
               }
 
-              return IconComponent;
+              if (route.name === 'Food database') {
+                IconComponent = <Image source={foodLogo} style={{ width: size, height: size }} />;
+                return IconComponent;
+              }
+
+              if (route.name === 'Meal planning') {
+                IconComponent = (
+                  <Image source={calendarLogo} style={{ width: size, height: size }} />
+                );
+                return IconComponent;
+              }
             },
             tabBarActiveTintColor: 'tomato',
             tabBarInactiveTintColor: 'gray',
-            tabBarStyle: { display: 'flex' }
-          })}
-        >
+            tabBarStyle: { display: 'flex' },
+          })}>
           <Tab.Screen name="Health goals" component={HealthScreen} />
           <Tab.Screen name="Food database" component={FoodScreen} />
           <Tab.Screen name="Meal planning" component={MealScreen} />
