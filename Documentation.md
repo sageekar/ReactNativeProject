@@ -37,7 +37,7 @@ All required features have been implemented.
 
 ## Roadmap
 
-### Week 1: June 7 - June 13
+### Week 1=June 7 - June 13
 
 #### june 7 
 - Creation of the GitHub repository and initialization of the React Native project with Expo.
@@ -54,7 +54,7 @@ All required features have been implemented.
 #### june 13 
 - Addition of data persistence with AsyncStorage.
 
-### Week 2 : june 14  - june 20 
+### Week 2 =june 14  - june 20 
 
 #### june 14 
 - Start of the development of the "Meal Planning" module.
@@ -82,8 +82,55 @@ Although the project is finished for now, there are always improvements and addi
 
 ## Screenshots
 
-(Insert application screenshots here)
+![](./screenshot/Add.jpg){ width=250 height=500} 
+<!-- widh is for the export in pdf, use 'pandoc Documentation.md -s -o Documentation.pdf' for conversion -->
 
+Description: This screenshot shows the interface for adding food items to the meal plan.
+
+![](./screenshot/AppleAdd.jpg){ width=250 height=500}
+
+Description: This screenshot shows the process of adding an apple to the meal plan.
+
+![](./screenshot/butonOK.jpg){ width=250 height=500}
+
+Description: This screenshot shows the OK button that users can click to confirm their actions.
+
+![](./screenshot/focusForm.jpg){ width=250 height=500}
+
+Description: This screenshot shows a form in focus, ready for user input.
+
+![](./screenshot/foodDataBase.jpg){ width=250 height=500}
+
+Description: This screenshot shows the food database where users can search for food items.
+
+![](./screenshot/formEmpty.jpg){ width=250 height=500}
+
+Description: This screenshot shows an empty form, indicating that the user has not yet entered any information.
+
+![](./screenshot/formError.jpg){ width=250 height=500}
+
+Description: This screenshot shows a form error, indicating that the user has entered invalid information.
+
+![](./screenshot/formSubmited.jpg){ width=250 height=500}
+
+Description: This screenshot shows a form that has been successfully submitted.
+
+![](./screenshot/MealPlanning.jpg){ width=250 height=500}
+
+Description: This screenshot shows the meal planning interface where users can plan their meals for the week.
+
+![](./screenshot/notfound.jpg){ width=250 height=500}
+
+Description: This screenshot shows a "Not Found" message, indicating that the requested item could not be found in the database.
+
+![](screenshot/result.jpg){ width=250 height=500}
+
+Description: This screenshot shows the result of a user's actions, such as the total calories of a meal plan.
+
+![](./screenshot/searchApple.jpg){ width=250 height=500}
+
+Description: This screenshot shows the result of a search for "apple" in the food database.
+    
 ## Challenges Encountered
 
 During the development of the application we encountered some difficulties. These included understanding what was technically required of us, managing state in React Native, integrating with the nutrition API, and creating an intuitive and responsive user interface.
